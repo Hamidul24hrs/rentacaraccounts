@@ -1,0 +1,1663 @@
+/* Base Layout */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Fixed Header */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    z-index: 1030;
+    padding: 0 15px;
+    background-color: #2c3e50;
+}
+
+/* Main Layout Container */
+.layout-container {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    display: none;
+    width: 280px;
+    min-width: 280px;
+    height: calc(100vh - 60px);
+    position: fixed;
+    top: 60px;
+    left: 0;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sidebar-content {
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.sidebar-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+    background-color: rgba(52, 152, 219, 0.5);
+    border-radius: 3px;
+}
+
+/* Show active sidebar */
+.sidebar.active {
+    display: flex;
+}
+
+/* Admin Sidebar Specific */
+#adminSidebar {
+    background: linear-gradient(135deg, #1a2942 0%, #2c3e50 100%);
+}
+
+#adminSidebar .sidebar-content::-webkit-scrollbar-thumb {
+    background-color: rgba(52, 152, 219, 0.5);
+}
+
+#adminSidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+#adminSidebar .nav-link:hover {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+#adminSidebar .nav-link.active {
+    background-color: #3498db;
+    color: white;
+}
+
+#adminSidebar .section-title {
+    color: #3498db;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+}
+
+/* Manager Sidebar Specific */
+#managerSidebar {
+    background: linear-gradient(135deg, #145a32 0%, #27ae60 100%);
+}
+
+#managerSidebar .sidebar-content::-webkit-scrollbar-thumb {
+    background-color: rgba(46, 204, 113, 0.5);
+}
+
+#managerSidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+#managerSidebar .nav-link:hover {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+#managerSidebar .nav-link.active {
+    background-color: #2ecc71;
+    color: white;
+}
+
+#managerSidebar .section-title {
+    color: #2ecc71;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+}
+
+/* Accountant Sidebar Specific */
+#accountantSidebar {
+    background: linear-gradient(135deg, #4a235a 0%, #8e44ad 100%);
+}
+
+#accountantSidebar .sidebar-content::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 89, 182, 0.5);
+}
+
+#accountantSidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+#accountantSidebar .nav-link:hover {
+    background-color: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+}
+
+#accountantSidebar .nav-link.active {
+    background-color: #9b59b6;
+    color: white;
+}
+
+#accountantSidebar .section-title {
+    color: #9b59b6;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+}
+
+/* Role-specific sections visibility */
+.admin-only,
+.manager-only,
+.accountant-only {
+    display: none !important;
+}
+
+/* Show sections based on user role */
+body[data-role="admin"] .admin-only,
+body[data-role="manager"] .manager-only,
+body[data-role="accountant"] .accountant-only {
+    display: flex !important;
+}
+
+/* Profile Section */
+.sidebar-profile {
+    text-align: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.profile-image-container {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.profile-image-container:hover .profile-image-overlay {
+    opacity: 1;
+}
+
+.profile-name {
+    color: white;
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.profile-role {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+/* Search Container */
+.search-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-bar {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: white;
+}
+
+.search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Navigation Links */
+.nav-section {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-bottom: 3px;
+}
+
+.nav-link:hover {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.nav-link.active {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.nav-link i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        height: 100%;
+        z-index: 1020;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+    position: absolute;
+    right: -12px;
+    top: 70px;
+    width: 24px;
+    height: 24px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #2980b9;
+    transform: scale(1.1);
+}
+
+.sidebar-toggle i {
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
+}
+
+/* Custom styles */
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.btn-group-sm > .btn {
+    margin: 0 2px;
+}
+
+/* Login styles */
+#loginSection {
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+#loginSection .card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#loginSection .card-header {
+    background-color: #fff;
+    padding: 1.5rem 1rem;
+}
+
+#loginSection .card-body {
+    padding: 2rem;
+}
+
+/* User info styles */
+#userInfo {
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.role-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+}
+
+.role-admin {
+    background-color: #dc3545;
+    color: white;
+}
+
+.role-accountant {
+    background-color: #198754;
+    color: white;
+}
+
+/* Status styles */
+.status-pending {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.status-approved {
+    color: #198754;
+    font-weight: 600;
+}
+
+.status-rejected {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Invoice styles */
+.invoice-header {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+.invoice-company {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.invoice-details {
+    margin: 2rem 0;
+}
+
+.invoice-table {
+    margin: 2rem 0;
+}
+
+.invoice-total {
+    border-top: 2px solid #dee2e6;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    text-align: right;
+}
+
+.invoice-status {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.invoice-status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.invoice-status.approved {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.invoice-status.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.deduction-details {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .invoice-content {
+        padding: 2rem;
+    }
+
+    .invoice-status {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .table-responsive {
+        font-size: 14px;
+    }
+    
+    .btn-group-sm > .btn {
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    #userInfo {
+        display: none;
+    }
+
+    .role-badge {
+        display: none;
+    }
+}
+
+/* Main Styles */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Styles */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Table Styles */
+.table {
+    background-color: white;
+}
+
+.table th {
+    background-color: var(--light-color);
+    font-weight: 600;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Badge Styles */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 500;
+}
+
+/* Button Group Styles */
+.btn-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    background-color: var(--light-color);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+/* Invoice Styles */
+.invoice-content {
+    padding: 2rem;
+}
+
+.invoice-header {
+    border-bottom: 2px solid var(--light-color);
+    margin-bottom: 2rem;
+}
+
+.invoice-status {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.invoice-status.pending {
+    background-color: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.invoice-status.approved {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.invoice-status.rejected {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .btn-group-sm > .btn {
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .table td, .table th {
+        padding: 0.5rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    #invoiceContent, #invoiceContent * {
+        visibility: visible;
+    }
+    
+    #invoiceContent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+}
+
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Table Styles */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Badge Styles */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+/* Section Styles */
+.section {
+    animation: fadeIn 0.3s ease-in-out;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: none;
+}
+
+.section.active {
+    display: block !important;
+}
+
+/* Role-based visibility */
+.admin-only {
+    display: none;
+}
+
+.manager-only {
+    display: none;
+}
+
+.accountant-only {
+    display: none;
+}
+
+/* Show elements based on role */
+body[data-role="admin"] .admin-only,
+body[data-role="manager"] .manager-only,
+body[data-role="accountant"] .accountant-only {
+    display: block;
+}
+
+/* Always show common elements */
+.nav-item:not(.admin-only):not(.manager-only):not(.accountant-only) {
+    display: block !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stats Cards */
+.card.bg-primary, 
+.card.bg-success, 
+.card.bg-info, 
+.card.bg-warning {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card.bg-primary .card-body, 
+.card.bg-success .card-body, 
+.card.bg-info .card-body, 
+.card.bg-warning .card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+/* Modal Styles */
+.modal-content {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 1rem 1.5rem;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #eee;
+    padding: 1rem 1.5rem;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .table {
+        width: 100% !important;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem !important;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .table-responsive {
+        border-radius: 10px;
+    }
+}
+
+/* Dashboard Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Statistics Cards */
+.stats-card {
+    padding: 20px;
+    color: white;
+    border-radius: 10px;
+}
+
+.stats-card .card-title {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.stats-card .card-text {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* Tables */
+.table {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Buttons */
+.btn-group-sm > .btn {
+    margin: 0 2px;
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Charts */
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 300px;
+}
+
+/* Invoice Styles */
+.invoice-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.invoice-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+.invoice-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.invoice-summary table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.invoice-summary td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Role-based section styles */
+.admin-only, .manager-only, .accountant-only {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .invoice-details {
+        flex-direction: column;
+    }
+    
+    .stats-card {
+        margin-bottom: 15px;
+    }
+    
+    .table-responsive {
+        border-radius: 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .invoice-container {
+        box-shadow: none;
+    }
+    
+    .table {
+        width: 100% !important;
+    }
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+    animation: slideIn 0.5s ease-out;
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Company Branding */
+.company-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Dashboard Styles */
+.stats-card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-card .card-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-card .card-text {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Table Styles */
+.table {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Invoice Styles */
+.invoice-content {
+    padding: 2rem;
+}
+
+.invoice-header {
+    border-bottom: 2px solid var(--light-color);
+    margin-bottom: 2rem;
+}
+
+.invoice-company {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.invoice-details {
+    margin: 2rem 0;
+}
+
+.invoice-table {
+    margin: 2rem 0;
+}
+
+.invoice-total {
+    border-top: 2px solid #dee2e6;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    text-align: right;
+}
+
+.invoice-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+    padding: 1rem 1.25rem;
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-primary:hover {
+    background-color: #3a53d0;
+    border-color: #3a53d0;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background-color: white;
+    }
+    
+    .invoice-content {
+        padding: 0;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: none;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .table {
+        width: 100% !important;
+    }
+    
+    .table td, .table th {
+        background-color: transparent !important;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .company-name {
+        font-size: 2rem;
+    }
+    
+    .table-responsive {
+        border-radius: 10px;
+    }
+}
+
+/* Notification Styles */
+#notificationContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+#notificationContainer .alert {
+    margin-bottom: 10px;
+    min-width: 250px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Updated Sidebar styles */
+.main-content {
+    margin-left: 280px;
+    padding: 20px;
+    min-height: calc(100vh - 56px);
+    margin-top: 56px;
+    transition: all 0.3s;
+}
+
+.main-content.full-width {
+    margin-left: 0;
+}
+
+.sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    height: calc(100vh - 56px);
+    width: 280px;
+    background-color: #2c3e50;
+    z-index: 99;
+    transition: all 0.3s;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3498db #2c3e50;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #2c3e50;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #3498db;
+    border-radius: 4px;
+    border: 2px solid #2c3e50;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #2980b9;
+}
+
+/* Container fluid adjustment */
+.container-fluid {
+    padding: 0 20px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        z-index: 1020;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .sidebar-toggle {
+        display: none;
+    }
+}
+
+/* Sidebar Profile Section */
+.sidebar-profile {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 15px;
+}
+
+.profile-image-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #3498db;
+    padding: 3px;
+    background-color: #fff;
+    transition: all 0.3s;
+}
+
+.profile-image:hover {
+    border-color: #2ecc71;
+    transform: scale(1.05);
+}
+
+.profile-image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(52, 152, 219, 0.7);
+    padding: 4px;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.profile-image-container:hover .profile-image-overlay {
+    opacity: 1;
+}
+
+.profile-name {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.profile-role {
+    color: #95a5a6;
+    font-size: 0.9rem;
+}
+
+/* Quick Links Section */
+.quick-links-section {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.quick-action-btn i {
+    font-size: 1.2rem;
+}
+
+/* Admin Quick Actions */
+#adminSidebar .quick-action-btn:hover {
+    background: rgba(52, 152, 219, 0.2);
+}
+
+/* Manager Quick Actions */
+#managerSidebar .quick-action-btn:hover {
+    background: rgba(46, 204, 113, 0.2);
+}
+
+/* Accountant Quick Actions */
+#accountantSidebar .quick-action-btn:hover {
+    background: rgba(155, 89, 182, 0.2);
+}
+
+/* Settings Section */
+.sidebar-settings {
+    padding: 15px;
+}
+
+.settings-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    color: #ecf0f1;
+    background: rgba(52, 152, 219, 0.1);
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+}
+
+.settings-btn:hover {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.settings-btn i {
+    margin-right: 10px;
+}
+
+/* Enhanced Search Bar */
+.search-container {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-bar {
+    width: 100%;
+    padding: 10px 15px 10px 35px;
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: all 0.3s;
+}
+
+.search-bar:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    outline: none;
+}
+
+.search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-icon {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Navigation Menu Updates */
+.sidebar .nav-section {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .section-title {
+    color: #95a5a6;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+.sidebar .nav-link {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.sidebar .nav-link.active {
+    background-color: #3498db;
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .sidebar {
+        top: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .sidebar-toggle {
+        display: none;
+    }
+}
+
+.sidebar-toggle {
+    position: fixed;
+    left: 280px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 4px;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s;
+}
+
+.sidebar-toggle:hover {
+    background: #2980b9;
+}
+
+.sidebar-toggle i {
+    transition: transform 0.3s;
+}
+
+.sidebar-hidden .sidebar-toggle {
+    left: 0;
+}
+
+.sidebar-hidden .sidebar-toggle i {
+    transform: rotate(180deg);
+}
+
+/* Container fluid adjustment */
+.container-fluid {
+    padding: 0 20px;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        z-index: 1020;
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .sidebar-toggle {
+        display: none;
+    }
+}
+
+/* Hide all role-specific sections by default */
+.admin-only,
+.manager-only,
+.accountant-only {
+    display: none !important;
+}
+
+/* Show sections based on user role */
+body[data-role="admin"] .admin-only,
+body[data-role="manager"] .manager-only,
+body[data-role="accountant"] .accountant-only {
+    display: flex !important;
+}
+
+/* Sidebar base styles */
+.sidebar {
+    display: none;
+    width: 280px;
+    min-width: 280px;
+    height: calc(100vh - 60px);
+    position: fixed;
+    top: 60px;
+    left: 0;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Show active sidebar */
+.sidebar.active {
+    display: flex;
+}

@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent-A-Car Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Fixed Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-car-front me-2"></i>
+                Rent-A-Car Management
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3">Welcome, <span id="userDisplay"></span></span>
+                <a href="login.html" onclick="sessionStorage.clear()" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="layout-container">
+        <!-- Admin Sidebar -->
+        <aside class="sidebar admin-only" id="adminSidebar">
+            <div class="sidebar-content">
+                <!-- Profile Section -->
+                <div class="sidebar-profile">
+                    <div class="profile-image-container">
+                        <img src="default-avatar.png" alt="Profile" id="adminProfileImage" class="profile-image">
+                        <div class="profile-image-overlay">
+                            <i class="bi bi-camera"></i> Change Photo
+                        </div>
+                        <input type="file" id="adminProfileInput" accept="image/*" hidden>
+                    </div>
+                    <h5 class="profile-name" id="adminName">Admin Name</h5>
+                    <div class="profile-role">Administrator</div>
+                </div>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-bar" placeholder="Search users, settings...">
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="nav-section">
+                    <div class="section-title">Quick Actions</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#addUser">
+                            <i class="bi bi-person-plus"></i>
+                            Add New User
+                        </a>
+                        <a class="nav-link" href="#systemStatus">
+                            <i class="bi bi-activity"></i>
+                            System Status
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="quick-links-section">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="quick-links">
+                        <button class="quick-action-btn" onclick="quickAction('createUser')">
+                            <i class="bi bi-person-plus"></i>
+                            <span>Add New User</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('createRole')">
+                            <i class="bi bi-shield-plus"></i>
+                            <span>Create Role</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('auditLog')">
+                            <i class="bi bi-journal-text"></i>
+                            <span>View Audit Log</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Navigation -->
+                <div class="nav-section">
+                    <div class="section-title">Administration</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#dashboard">
+                            <i class="bi bi-speedometer2"></i>
+                            Dashboard
+                        </a>
+                        <a class="nav-link" href="#users">
+                            <i class="bi bi-people"></i>
+                            User Management
+                        </a>
+                        <a class="nav-link" href="#roles">
+                            <i class="bi bi-person-badge"></i>
+                            Role Management
+                        </a>
+                        <a class="nav-link" href="#permissions">
+                            <i class="bi bi-shield-check"></i>
+                            Permissions
+                        </a>
+                        <a class="nav-link" href="#audit">
+                            <i class="bi bi-journal-text"></i>
+                            Audit Logs
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- System Settings -->
+                <div class="nav-section">
+                    <div class="section-title">System</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#settings" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="bi bi-gear"></i>
+                            Settings
+                        </a>
+                        <a class="nav-link" href="#backup">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            Backup
+                        </a>
+                        <a class="nav-link" href="login.html" onclick="sessionStorage.clear()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Manager Sidebar -->
+        <aside class="sidebar manager-only" id="managerSidebar">
+            <div class="sidebar-content">
+                <!-- Profile Section -->
+                <div class="sidebar-profile">
+                    <div class="profile-image-container">
+                        <img src="default-avatar.png" alt="Profile" id="managerProfileImage" class="profile-image">
+                        <div class="profile-image-overlay">
+                            <i class="bi bi-camera"></i> Change Photo
+                        </div>
+                        <input type="file" id="managerProfileInput" accept="image/*" hidden>
+                    </div>
+                    <h5 class="profile-name" id="managerName">Manager Name</h5>
+                    <div class="profile-role">Car Manager</div>
+                </div>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-bar" placeholder="Search cars, rentals...">
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="nav-section">
+                    <div class="section-title">Quick Actions</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#newBooking">
+                            <i class="bi bi-plus-circle"></i>
+                            New Booking
+                        </a>
+                        <a class="nav-link" href="#addCar">
+                            <i class="bi bi-car-front"></i>
+                            Add New Car
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="quick-links-section">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="quick-links">
+                        <button class="quick-action-btn" onclick="quickAction('newBooking')">
+                            <i class="bi bi-calendar-plus"></i>
+                            <span>New Booking</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('addCar')">
+                            <i class="bi bi-car-front"></i>
+                            <span>Add Vehicle</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('maintenance')">
+                            <i class="bi bi-tools"></i>
+                            <span>Schedule Maintenance</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vehicle Management -->
+                <div class="nav-section">
+                    <div class="section-title">Vehicle Management</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#fleet">
+                            <i class="bi bi-car-front"></i>
+                            Fleet Overview
+                        </a>
+                        <a class="nav-link" href="#rentals">
+                            <i class="bi bi-calendar-check"></i>
+                            Active Rentals
+                        </a>
+                        <a class="nav-link" href="#maintenance">
+                            <i class="bi bi-tools"></i>
+                            Maintenance
+                        </a>
+                        <a class="nav-link" href="#drivers">
+                            <i class="bi bi-person-badge"></i>
+                            Drivers
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Reports & Settings -->
+                <div class="nav-section">
+                    <div class="section-title">Reports & Settings</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#reports">
+                            <i class="bi bi-file-earmark-text"></i>
+                            Vehicle Reports
+                        </a>
+                        <a class="nav-link" href="#settings" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="bi bi-gear"></i>
+                            Settings
+                        </a>
+                        <a class="nav-link" href="login.html" onclick="sessionStorage.clear()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Accountant Sidebar -->
+        <aside class="sidebar accountant-only" id="accountantSidebar">
+            <div class="sidebar-content">
+                <!-- Profile Section -->
+                <div class="sidebar-profile">
+                    <div class="profile-image-container">
+                        <img src="default-avatar.png" alt="Profile" id="accountantProfileImage" class="profile-image">
+                        <div class="profile-image-overlay">
+                            <i class="bi bi-camera"></i> Change Photo
+                        </div>
+                        <input type="file" id="accountantProfileInput" accept="image/*" hidden>
+                    </div>
+                    <h5 class="profile-name" id="accountantName">Accountant Name</h5>
+                    <div class="profile-role">Accountant</div>
+                </div>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-bar" placeholder="Search transactions, invoices...">
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="nav-section">
+                    <div class="section-title">Quick Actions</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#newPayment">
+                            <i class="bi bi-plus-circle"></i>
+                            New Payment
+                        </a>
+                        <a class="nav-link" href="#newInvoice">
+                            <i class="bi bi-receipt"></i>
+                            Create Invoice
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="quick-links-section">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="quick-links">
+                        <button class="quick-action-btn" onclick="quickAction('createInvoice')">
+                            <i class="bi bi-receipt"></i>
+                            <span>Create Invoice</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('recordPayment')">
+                            <i class="bi bi-cash"></i>
+                            <span>Record Payment</span>
+                        </button>
+                        <button class="quick-action-btn" onclick="quickAction('generateReport')">
+                            <i class="bi bi-file-earmark-text"></i>
+                            <span>Financial Report</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Financial Management -->
+                <div class="nav-section">
+                    <div class="section-title">Financial Management</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#transactions">
+                            <i class="bi bi-credit-card"></i>
+                            Transactions
+                        </a>
+                        <a class="nav-link" href="#invoices">
+                            <i class="bi bi-receipt"></i>
+                            Invoices
+                        </a>
+                        <a class="nav-link" href="#expenses">
+                            <i class="bi bi-wallet2"></i>
+                            Expenses
+                        </a>
+                        <a class="nav-link" href="#revenue">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            Revenue
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Reports & Settings -->
+                <div class="nav-section">
+                    <div class="section-title">Reports & Settings</div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#financialReports">
+                            <i class="bi bi-file-earmark-spreadsheet"></i>
+                            Financial Reports
+                        </a>
+                        <a class="nav-link" href="#taxReports">
+                            <i class="bi bi-file-earmark-text"></i>
+                            Tax Reports
+                        </a>
+                        <a class="nav-link" href="#settings" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="bi bi-gear"></i>
+                            Settings
+                        </a>
+                        <a class="nav-link" href="login.html" onclick="sessionStorage.clear()">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <!-- Admin Dashboard -->
+                <div id="adminDashboard" class="section">
+                    <!-- Company Header -->
+                    <div class="card mb-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="company-name mb-2">Sabbir Rent A Car</h2>
+                            <h5 class="text-muted mb-3">All kinds of AC/Non-AC Vehicle Supplier</h5>
+                            <p class="mb-1">Ta 58/F, Gudaraghat, Middle Badda, Dhaka-1212</p>
+                            <p class="mb-1">Email: sabbirrentacar01@gmail.com</p>
+                            <p class="mb-0">Cell: +8801317361638, +8801726103097, +8801893420118</p>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card stats-card bg-primary text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Total Cars</h6>
+                                    <p class="card-text" id="totalCars">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stats-card bg-success text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Active Rentals</h6>
+                                    <p class="card-text" id="activeRentals">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stats-card bg-info text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Monthly Revenue</h6>
+                                    <p class="card-text" id="monthlyRevenue">৳0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stats-card bg-warning text-white">
+                                <div class="card-body">
+                                    <h6 class="card-title">Pending Payments</h6>
+                                    <p class="card-text" id="pendingPayments">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Management Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Invoice Management</h5>
+                            <div>
+                                <button class="btn btn-light btn-sm me-2" onclick="exportPaymentsToExcel()">
+                                    <i class="bi bi-file-excel me-1"></i> Export to Excel
+                                </button>
+                                <button class="btn btn-light btn-sm" onclick="printPayments()">
+                                    <i class="bi bi-printer"></i> Print List
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Search and Filter -->
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Search</label>
+                                    <input type="text" class="form-control" id="paymentSearch" placeholder="Search...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Month</label>
+                                    <select class="form-select" id="monthFilter" aria-label="Filter by month">
+                                        <option value="">All Months</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="statusFilter" aria-label="Filter by status">
+                                        <option value="">All Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Sort By</label>
+                                    <select class="form-select" id="sortBy" aria-label="Sort payments">
+                                        <option value="date">Sort by Date</option>
+                                        <option value="amount">Sort by Amount</option>
+                                        <option value="status">Sort by Status</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Payments Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Invoice #</th>
+                                            <th>Month</th>
+                                            <th>Owner</th>
+                                            <th>Vehicle</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paymentsTableBody">
+                                        <!-- Payments will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="text-muted">
+                                    Showing <span id="showingEntries">0</span> of <span id="totalEntries">0</span> entries
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination mb-0" id="pagination">
+                                        <!-- Pagination will be generated here -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Management Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">User Management</h5>
+                            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                <i class="bi bi-person-plus me-1"></i> Add New User
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- Users Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <!-- Users will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Quick Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary w-100" onclick="showSection('carManagement')">
+                                        <i class="bi bi-car-front me-2"></i>Manage Vehicles
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-success w-100" onclick="showSection('payments')">
+                                        <i class="bi bi-cash me-2"></i>Process Payments
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-info w-100" onclick="showReports()">
+                                        <i class="bi bi-graph-up me-2"></i>View Reports
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car Management Section -->
+                <div id="carManagement" class="section manager-only">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Car Management</h5>
+                            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                                <i class="bi bi-plus-circle me-1"></i> Add New Car
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- Car Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Car Name</th>
+                                            <th>Number</th>
+                                            <th>Owner</th>
+                                            <th>Mobile</th>
+                                            <th>GPS</th>
+                                            <th>Rent</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="carTableBody">
+                                        <!-- Cars will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Management Section -->
+                <div id="payments" class="section accountant-only">
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h2>Payment Management</h2>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <label for="paymentSearchInput" class="visually-hidden">Search payments</label>
+                                <input type="text" id="paymentSearchInput" class="form-control" placeholder="Search by car number, owner name..." aria-label="Search payments">
+                                <button class="btn btn-primary" onclick="searchPayments()" aria-label="Search">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Status Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Pending Payments</h5>
+                                    <h2 class="card-text" id="pendingPaymentsCount">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Approved Payments</h5>
+                                    <h2 class="card-text" id="approvedPaymentsCount">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Amount</h5>
+                                    <h2 class="card-text" id="totalPaymentAmount">৳0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">This Month</h5>
+                                    <h2 class="card-text" id="currentMonthAmount">৳0</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Table -->
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="monthFilter" class="form-label">Filter by Month</label>
+                                            <select class="form-select" id="monthFilter" onchange="searchPayments()">
+                                                <option value="">All Months</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="statusFilter" class="form-label">Filter by Status</label>
+                                            <select class="form-select" id="statusFilter" onchange="searchPayments()">
+                                                <option value="">All Status</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="approved">Approved</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="sortBy" class="form-label">Sort By</label>
+                                            <select class="form-select" id="sortBy" onchange="searchPayments()">
+                                                <option value="date">Date (Newest First)</option>
+                                                <option value="amount">Amount (High to Low)</option>
+                                                <option value="status">Status</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="exportPaymentsToExcel()">
+                                        <i class="bi bi-file-excel me-1"></i> Export
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="printPayments()">
+                                        <i class="bi bi-printer"></i> Print
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="paymentTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Car Number</th>
+                                            <th>Car Model</th>
+                                            <th>Owner Name</th>
+                                            <th>Month</th>
+                                            <th>Amount</th>
+                                            <th>Due Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paymentTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Car Modal -->
+    <div class="modal fade" id="addCarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Car</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCarForm" onsubmit="addCar(event)">
+                        <div class="mb-3">
+                            <label class="form-label">Car Name</label>
+                            <input type="text" class="form-control" id="carName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Car Number</label>
+                            <input type="text" class="form-control" id="carNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Owner Name</label>
+                            <input type="text" class="form-control" id="ownerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="text" class="form-control" id="ownerMobile" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">GPS Number</label>
+                            <input type="text" class="form-control" id="gpsNumber">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Rent Amount</label>
+                            <input type="number" class="form-control" id="rentAmount" required>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Car</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Car Modal -->
+    <div class="modal fade" id="editCarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">গাড়ির তথ্য সম্পাদনা</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCarForm" onsubmit="saveCarEdit(event)">
+                        <input type="hidden" id="editCarId">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">গাড়ির নাম</label>
+                            <input type="text" class="form-control" id="editCarName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">গাড়ির নম্বর</label>
+                            <input type="text" class="form-control" id="editCarNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">মালিকের নাম</label>
+                            <input type="text" class="form-control" id="editOwnerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">মোবাইল নম্বর</label>
+                            <input type="text" class="form-control" id="editOwnerMobile" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">GPS নম্বর</label>
+                            <input type="text" class="form-control" id="editGpsNumber">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ভাড়ার পরিমাণ</label>
+                            <input type="number" class="form-control" id="editRentAmount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">স্ট্যাটাস</label>
+                            <select class="form-select" id="editCarStatus" required>
+                                <option value="active">সক্রিয়</option>
+                                <option value="inactive">নিষ্ক্রিয়</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
+                            <button type="submit" class="btn btn-primary">আপডেট করুন</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Make Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentForm">
+                        <input type="hidden" id="paymentCarId">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="paymentMonth" class="form-label">Payment Month</label>
+                                <input type="month" class="form-control" id="paymentMonth" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="paymentAmount" class="form-label">Payment Amount ($)</label>
+                                <input type="number" class="form-control" id="paymentAmount" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="absentDays" class="form-label">Absent Days</label>
+                                <input type="number" class="form-control" id="absentDays" min="0" value="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="replacementCar" class="form-label">Replacement Car</label>
+                                <select class="form-select" id="replacementCar">
+                                    <option value="">No Replacement</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="paymentNotes" class="form-label">Notes</label>
+                                <textarea class="form-control" id="paymentNotes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="makePaymentBtn">Make Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Invoice</h5>
+                    <div>
+                        <button type="button" class="btn btn-primary me-2" onclick="printInvoice()">
+                            <i class="bi bi-printer"></i> Print
+                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="invoiceContent" class="invoice-content">
+                        <div class="invoice-header">
+                            <div class="invoice-company">Rent-A-Car Management System</div>
+                            <div id="invoiceNumber"></div>
+                            <div id="invoiceDate"></div>
+                        </div>
+                        <div class="row invoice-details">
+                            <div class="col-md-6">
+                                <h5>Car Details:</h5>
+                                <div id="invoiceCarDetails"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Payment Details:</h5>
+                                <div id="invoicePaymentDetails"></div>
+                            </div>
+                        </div>
+                        <div class="deduction-details" id="invoiceDeductions"></div>
+                        <div class="invoice-total">
+                            <h4>Total Amount: <span id="invoiceTotalAmount"></span></h4>
+                        </div>
+                        <div id="invoiceStatus" class="text-center mt-4"></div>
+                        <div class="text-center mt-4">
+                            <small>This is a computer-generated invoice. No signature required.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" id="newUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" id="newName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" id="newRole" required>
+                                <option value="">Select Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                                <option value="accountant">Accountant</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="addUser()">Add User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Approval Modal -->
+    <div class="modal fade" id="paymentApprovalModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Payment Approval</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentApprovalForm">
+                        <input type="hidden" id="approvalPaymentId">
+                        
+                        <!-- Car and Owner Details -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <p><strong>Car Number:</strong> <span id="approvalCarNumber"></span></p>
+                                <p><strong>Car Model:</strong> <span id="approvalCarModel"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Owner Name:</strong> <span id="approvalOwnerName"></span></p>
+                                <p><strong>Monthly Rent:</strong> ৳<span id="approvalRentAmount"></span></p>
+                            </div>
+                        </div>
+
+                        <!-- Absence Details -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Absence Details</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addAbsenceRow()">
+                                        <i class="bi bi-plus"></i> Add Absence
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="absenceRows"></div>
+                            </div>
+                        </div>
+
+                        <!-- Replacement Details -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Replacement Details</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="addReplacementRow()">
+                                        <i class="bi bi-plus"></i> Add Replacement
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="replacementRows"></div>
+                            </div>
+                        </div>
+
+                        <!-- Final Amount -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>Total Deductions:</strong> ৳<span id="totalDeductions">0</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Final Amount:</strong> ৳<span id="finalAmount">0</span></p>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-success float-end">
+                                    <i class="bi bi-check-circle"></i> Approve Payment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Profile Settings -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Profile Settings</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="settingsName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="settingsEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="settingsPhone">
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Notification Preferences</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="emailNotif">
+                            <label class="form-check-label" for="emailNotif">
+                                Email Notifications
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="smsNotif">
+                            <label class="form-check-label" for="smsNotif">
+                                SMS Notifications
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Theme Settings -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Display Settings</h6>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="darkMode">
+                            <label class="form-check-label" for="darkMode">
+                                Dark Mode
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveSettings">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show sidebar based on user role
+            const userRole = sessionStorage.getItem('role') || 'admin';
+            showSidebarForRole(userRole);
+
+            // Initialize payment filters if they exist
+            if (document.getElementById('filterMonth')) {
+                initializePaymentFilters();
+            }
+
+            // Handle profile image upload
+            document.querySelectorAll('.profile-image-container').forEach(container => {
+                const input = container.querySelector('input[type="file"]');
+                const img = container.querySelector('img');
+                
+                container.addEventListener('click', () => input.click());
+                
+                input.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => img.src = e.target.result;
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            });
+
+            // Active Link Handling
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
